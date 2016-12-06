@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Wall</title>
+    {% include 'header.html' %}
+  </head>
+  <body>
+    <div class="container">
+      <h1>The Wall, welcome {{session['username']}}</h1>
+      <a href = "/logout">Logout</a>
+
+      {% with messages = get_flashed_messages(category_filter = ["posts"]) %}
+      {% if messages %}
+      {% for message in messages %}
+      <p class="red">{{message}}</p>
+      {% endfor %}
+      {% endif %}
+      {% endwith  %}
+
+
+      <form action="/create_message" method="post">
+        <textarea cols="150" rows = "4" name="message"></textarea>
+        <button type="submit" class="btn btn-success">Post a message!</button>
+
+      </form>
+      {{messages}}
+      {% for message in messages %}
+      <h5>{{message['first_name']}} - {{message['created_at']}}</h5>
+      <p>
+        {{message.message}}
+      </p>
+      <div class="comments">
+        {% for comment in comments %}
+        {% if comment['message_id'] == message['id'] %}
+        <h5>{{comment['first_name']}} - {{comment['created_at']}}</h5>
+        <p>
+          {{comment['comment']}}
+        </p>
+        {% endif %}
+        {% endfor %}
+
+      </div>
+      <form action="/create_comment" method="post">
+        <input type="hidden" name = "messageid" value = {{message['id']}} />
+        <textarea cols="150" rows = "2" name="comment"></textarea>
+        <button type="submit" class="btn btn-success">Post a comment!</button>
+
+      </form>
+      {% endfor %}
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
